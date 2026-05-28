@@ -1,0 +1,27 @@
+[project]
+name = "tray"
+version = "0.1.0"
+description = "Camera trajectory estimation on TUM RGB-D via epipolar geometry and ICP."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "matplotlib>=3.10.9",
+    "numpy>=2.4.6",
+    "opencv-contrib-python>=4.13.0.92",
+    "pyyaml>=6.0.3",
+    "scipy>=1.17.1",
+    "tqdm>=4.67.3",
+]
+
+[project.scripts]
+tray = "tray:main"
+
+[build-system]
+requires = ["uv_build>=0.11.14,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "ruff>=0.15.15",
+]

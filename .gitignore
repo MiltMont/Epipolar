@@ -1,0 +1,20 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Project artifacts (root-anchored so src/tray/data/ stays tracked)
+/data/
+/results/
+*.npy
+*.png
+!docs/**/*.png
+
+# OS
+.DS_Store
