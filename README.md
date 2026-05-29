@@ -1,4 +1,4 @@
-# Tray — Estimación de Trayectorias con Geometría Epipolar e ICP
+# Estimación de Trayectorias con Geometría Epipolar e ICP
 
 Estimación y evaluación de trayectorias de cámara sobre el dataset **TUM RGB-D** mediante dos pipelines implementados desde cero:
 
