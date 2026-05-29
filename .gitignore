@@ -18,3 +18,13 @@ wheels/
 
 # OS
 .DS_Store
+
+# Documentation 
+EXPERIMENTS.md
+GUIDE.md
+INDEX.md
+INSTRUCTIONS.md
+PARAMETERS.md
+PATHS.md
+VISUALISATION.md
+NEXT_STEPS.md

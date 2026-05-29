@@ -1,8 +1,0 @@
-Contenidos.
-
-1. GUIDE.md
-2. INSTRUCTIONS.md
-3. EXPERIMENTS.md
-4. PATHS.md
-5. VISUALISATION.md
-6. PARAMETERS.md
