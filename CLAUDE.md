@@ -2,9 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Plan and current progress
+
+The implementation plan lives at `~/.claude/plans/compressed-bubbling-falcon.md` — read it before starting work to see the full Phase 2 step list, the five required configurations per pipeline, and the "gotchas" section (TUM depth scale, intrinsics per sequence, Umeyama scale-on-vs-off, 7-point cubic ambiguity, etc.). `git log --oneline` is the source of truth for what's been built.
+
+As of the latest commit:
+
+- ✅ **Phase 0** — uv bootstrap, deps, scaffolding, git init, CLAUDE.md commands section.
+- ✅ **Phase 2 step 1** — `src/tray/data/tum.py` (Intrinsics + freiburg1/2/3, file parsing, quaternion→SE(3), TUM `associate.py`-style nearest-timestamp pairing, `load_sequence`). Real `freiburg1_xyz` loads with 99.7% GT coverage; the 2 unmatched frames sit inside a genuine ~110 ms mocap dropout.
+- ✅ **Phase 2 step 2** — `src/tray/features/` (ORB/SIFT factory, `Features`/`Matches` dataclasses, `match_top_n` + cross-check, `match_lowe`). 26 tests pass.
+- ⏭ **Phase 2 step 3 (next)** — `src/tray/epipolar/fundamental.py`: implement `eight_point` (Hartley normalization + SVD + rank-2 projection), `seven_point` (cubic det(F1 + α F2) = 0 → up to 3 candidates), and `ransac` from scratch. Cross-check against `cv2.findFundamentalMat` in tests.
+
 ## Repository status
 
-The project has been bootstrapped: `uv`-managed Python 3.12 package (`tray`) with a src-layout under `src/tray/` and empty submodules ready to fill in. The spec (Spanish) is split across files indexed by `INDEX.md`:
+`uv`-managed Python 3.12 package (`tray`) with a src-layout under `src/tray/`. The Spanish spec is split across files indexed by `INDEX.md`:
 
 - `GUIDE.md` — overall project description and objectives
 - `INSTRUCTIONS.md` — step-by-step algorithmic requirements (epipolar geometry + ICP)
@@ -46,7 +57,7 @@ bash scripts/download_tum.sh         # fetch TUM xyz + pioneer_slam into data/
 - `tests/` — synthetic-data unit tests; cross-check from-scratch math against OpenCV references
 - `data/`, `results/` — gitignored
 
-The from-scratch algorithm files (`epipolar/fundamental.py`, `epipolar/pose.py`, `icp/align.py`, `icp/iterate.py`, etc.) are intentionally not created yet; fill them in as Phase 2 of the plan progresses.
+The from-scratch algorithm files (`epipolar/fundamental.py`, `epipolar/pose.py`, `icp/align.py`, `icp/iterate.py`, etc.) are filled in as Phase 2 progresses — see the "Plan and current progress" section above for what's already landed.
 
 ## What the project must do
 
