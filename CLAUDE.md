@@ -11,7 +11,8 @@ As of the latest commit:
 - ✅ **Phase 0** — uv bootstrap, deps, scaffolding, git init, CLAUDE.md commands section.
 - ✅ **Phase 2 step 1** — `src/tray/data/tum.py` (Intrinsics + freiburg1/2/3, file parsing, quaternion→SE(3), TUM `associate.py`-style nearest-timestamp pairing, `load_sequence`). Real `freiburg1_xyz` loads with 99.7% GT coverage; the 2 unmatched frames sit inside a genuine ~110 ms mocap dropout.
 - ✅ **Phase 2 step 2** — `src/tray/features/` (ORB/SIFT factory, `Features`/`Matches` dataclasses, `match_top_n` + cross-check, `match_lowe`). 26 tests pass.
-- ⏭ **Phase 2 step 3 (next)** — `src/tray/epipolar/fundamental.py`: implement `eight_point` (Hartley normalization + SVD + rank-2 projection), `seven_point` (cubic det(F1 + α F2) = 0 → up to 3 candidates), and `ransac` from scratch. Cross-check against `cv2.findFundamentalMat` in tests.
+- ✅ **Phase 2 step 3** — `src/tray/epipolar/fundamental.py`: `eight_point` (Hartley normalization + SVD + rank-2 projection), `seven_point` (cubic det(αF1 + F2) = 0 via `np.poly1d` arithmetic → up to 3 candidates), `ransac` (8-pt minimal solver, Sampson-distance inlier test, refit on consensus set), plus `sampson_distance` utility. 17 tests cross-check against `cv2.findFundamentalMat`. 43 total tests pass.
+- ⏭ **Phase 2 step 4 (next)** — `src/tray/epipolar/pose.py`: `E = K^T F K`, SVD of E → 4 (R, t) candidates, DLT triangulation, cheirality check (pick candidate with most points in front of both cameras).
 
 ## Repository status
 
