@@ -12,8 +12,6 @@ Coverage:
 """
 from __future__ import annotations
 
-import tempfile
-from dataclasses import replace
 from pathlib import Path
 
 import cv2
@@ -177,7 +175,6 @@ class TestRunICPPipeline:
     def test_known_motion_recovered(self, tmp_path):
         """Two frames with a known rigid motion: trajectory[1] should
         approximate the inverse of T_rel applied to the world."""
-        rng_cloud = np.random.default_rng(42)
         cloud0 = _random_cloud(500, seed=42)
         # Apply known R, t to get cloud1 (cloud0 expressed in frame 1 coords).
         cloud1 = cloud0 @ _R_GT.T + _T_GT

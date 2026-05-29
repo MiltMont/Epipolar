@@ -1,0 +1,8 @@
+pipeline: icp
+name: icp_baseline
+sequence: rgbd_dataset_freiburg2_pioneer_slam
+max_iter: 50
+tolerance: 1.0e-4
+reject_dist_m: 0.5
+voxel_downsample: 1
+init_from_epipolar: false

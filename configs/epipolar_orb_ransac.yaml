@@ -1,0 +1,9 @@
+pipeline: epipolar
+name: epipolar_orb_ransac
+sequence: rgbd_dataset_freiburg1_xyz
+detector: orb
+n_features: 1000
+matcher: topn
+top_n: 200
+f_method: ransac
+ransac_threshold_px: 1.0

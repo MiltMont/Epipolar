@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import cv2
 import numpy as np
-import pytest
 
 from tray.epipolar.fundamental import eight_point, ransac
 from tray.epipolar.pose import (
@@ -124,9 +123,7 @@ def test_decompose_unit_translation() -> None:
     p1, p2, _ = _make_corr(50, noise=0.0)
     F = eight_point(p1, p2)
     E = essential_from_F(F, _K)
-    ts = {tuple(np.round(t, 6)) for _, t in decompose_E(E)}
-    # Translations come in ±t pairs — the set should have exactly 2 distinct vectors.
-    # Check each has unit norm.
+    # Translations come in ±t pairs; check each has unit norm.
     for _, t in decompose_E(E):
         assert abs(np.linalg.norm(t) - 1.0) < 1e-9, f"|t| = {np.linalg.norm(t):.6f}"
 

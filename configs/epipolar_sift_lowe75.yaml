@@ -1,0 +1,9 @@
+pipeline: epipolar
+name: epipolar_sift_lowe75
+sequence: rgbd_dataset_freiburg1_xyz
+detector: sift
+n_features: 1000
+matcher: lowe
+lowe_ratio: 0.75
+f_method: ransac
+ransac_threshold_px: 1.0
