@@ -75,7 +75,7 @@ def icp(
     converged = False
 
     for iteration in range(max_iter):
-        dists, idx = tree.query(src, k=1, workers=1)
+        dists, idx = tree.query(src, k=1, workers=-1)
 
         valid = dists < reject_dist
         n_valid = int(valid.sum())
