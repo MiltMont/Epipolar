@@ -15,7 +15,7 @@ Requisitos previos: **Python 3.12–3.13** y [uv](https://docs.astral.sh/uv/gett
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/MiltMont/Epipolar.git && cd Tray
+git clone https://github.com/MiltMont/Epipolar.git && cd Epipolar
 
 # Instalar dependencias (crea el entorno virtual automáticamente)
 uv sync
