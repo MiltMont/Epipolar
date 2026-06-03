@@ -45,7 +45,29 @@ uv run pytest -q
 uv run ruff check src tests
 ```
 
-Los resultados (métricas JSON, trayectoria `.npy`, gráficas PNG) se guardan en `results/<nombre_config>/`.
+Los resultados se guardan en `results/<nombre_config>/` con los siguientes archivos:
+
+| Archivo | Contenido |
+|---|---|
+| `trajectory.npy` | Trayectoria estimada `(N, 4, 4)` SE(3) |
+| `gt_trajectory.npy` | Poses de ground truth emparejadas `(M, 4, 4)` |
+| `ate_errors.npy` | Error ATE por fotograma `(M,)` en metros |
+| `metrics.json` | Estadísticas ATE + RTE |
+| `trajectory.png` | Gráfica 3D estimada vs. ground truth |
+
+### Dashboard interactivo
+
+```bash
+uv run streamlit run src/tray/viz/dashboard.py
+```
+
+Abre un dashboard en el navegador con:
+- Selector de configuraciones (comparación simultánea de varias)
+- Slider de rango de fotogramas
+- Toggle de overlay de ground truth
+- Toggle de alineación Umeyama (con/sin escala)
+- Tabla de métricas (ATE/RTE guardado vs. recalculado en vivo)
+- Gráfica de error ATE por fotograma
 
 ---
 
@@ -76,7 +98,8 @@ src/tray/
 │                   # triangulación DLT, control de quiralidad, pipeline de trayectoria
 ├── icp/            # Nube de puntos desde profundidad, SVD, iteración ICP, pipeline
 ├── eval/           # Alineación Umeyama, ATE, RTE
-├── viz/            # Gráficas 3D de trayectorias, visualización de matches
+├── viz/            # Gráficas 3D de trayectorias, visualización de matches,
+│                   # dashboard interactivo Streamlit/Plotly
 ├── experiments/    # Runner YAML → pipeline → results/
 └── cli.py          # Punto de entrada `python -m tray run`
 configs/            # 10 configuraciones YAML reproducibles
