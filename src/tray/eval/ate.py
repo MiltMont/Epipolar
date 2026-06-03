@@ -31,6 +31,37 @@ class ATEResult:
         }
 
 
+def umeyama_align(
+    estimated: np.ndarray,
+    ground_truth: np.ndarray,
+    *,
+    with_scale: bool = True,
+) -> np.ndarray:
+    """Return estimated trajectory spatially aligned to GT via Umeyama.
+
+    Args:
+        estimated:    (N, 4, 4) estimated SE(3) trajectory.
+        ground_truth: (N, 4, 4) ground-truth SE(3) trajectory (same N).
+        with_scale:   True for monocular/epipolar; False for ICP.
+
+    Returns:
+        (N, 4, 4) array with translation columns replaced by aligned positions.
+        Rotations are left unchanged (Umeyama aligns positions only).
+    """
+    estimated = np.asarray(estimated, dtype=np.float64)
+    ground_truth = np.asarray(ground_truth, dtype=np.float64)
+
+    P = estimated[:, :3, 3]
+    Q = ground_truth[:, :3, 3]
+
+    R, t, c = umeyama(P, Q, with_scale=with_scale)
+    P_aligned = apply_alignment(P, R, t, c)
+
+    out = estimated.copy()
+    out[:, :3, 3] = P_aligned
+    return out
+
+
 def compute_ate(
     estimated: np.ndarray,
     ground_truth: np.ndarray,

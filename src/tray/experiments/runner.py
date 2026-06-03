@@ -150,6 +150,10 @@ def run_experiment(
             f"Config must have pipeline: 'epipolar' or 'icp'; got {pipeline_type!r}"
         )
 
+    # ── Persist ───────────────────────────────────────────────────────────────
+    out_dir = Path(results_dir) / cfg.name
+    out_dir.mkdir(parents=True, exist_ok=True)
+
     # ── Evaluation ────────────────────────────────────────────────────────────
     est_paired, gt_paired = _paired_trajectories(seq, traj)
 
@@ -165,6 +169,7 @@ def run_experiment(
         rte = compute_rte(est_paired, gt_paired)
         metrics.update(ate.as_dict())
         metrics.update(rte.as_dict())
+        np.save(out_dir / "ate_errors.npy", ate.errors)
         logger.info(
             "%s — ATE RMSE=%.4f m | RTE RMSE=%.4f",
             cfg.name, ate.rmse, rte.rmse,
@@ -172,11 +177,8 @@ def run_experiment(
     else:
         logger.warning("%s — not enough GT frames to compute ATE/RTE", cfg.name)
 
-    # ── Persist ───────────────────────────────────────────────────────────────
-    out_dir = Path(results_dir) / cfg.name
-    out_dir.mkdir(parents=True, exist_ok=True)
-
     np.save(out_dir / "trajectory.npy", traj)
+    np.save(out_dir / "gt_trajectory.npy", gt_paired)
 
     with (out_dir / "metrics.json").open("w") as f:
         json.dump(metrics, f, indent=2)

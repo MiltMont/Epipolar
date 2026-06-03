@@ -22,6 +22,8 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "plotly>=5.22",
     "pytest>=9.0.3",
     "ruff>=0.15.15",
+    "streamlit>=1.35",
 ]

@@ -42,6 +42,7 @@ uv run pytest tests/test_x.py::test_y  # run a single test
 uv run ruff check src tests          # lint
 uv run ruff format src tests         # format
 bash scripts/download_tum.sh         # fetch TUM xyz + pioneer_slam into data/
+uv run streamlit run src/tray/viz/dashboard.py  # interactive trajectory dashboard
 ```
 
 ## Code layout

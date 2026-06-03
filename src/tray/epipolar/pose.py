@@ -136,7 +136,10 @@ def triangulate_dlt(
 
         _, _, Vt = np.linalg.svd(A, full_matrices=True)
         Xh = Vt[-1]              # homogeneous solution
-        X[i] = Xh[:3] / Xh[3]
+        if abs(Xh[3]) < 1e-10:  # point at infinity — mark degenerate
+            X[i] = np.nan
+        else:
+            X[i] = Xh[:3] / Xh[3]
 
     return X
 
@@ -180,13 +183,14 @@ def recover_pose(
         P2 = K @ np.hstack([R, t.reshape(3, 1)])        # K [R | t]
         X = triangulate_dlt(P1, P2, pts1, pts2)
 
-        # Depth in camera-1 frame.
-        z1 = X[:, 2]
+        finite = np.isfinite(X).all(axis=1)
+        # Use zero-substituted copy so matmul never sees NaN/Inf.
+        X_safe = np.where(finite[:, None], X, 0.0)
 
-        # Depth in camera-2 frame.
-        z2 = ((R @ X.T).T + t)[:, 2]
+        z1 = X_safe[:, 2]
+        z2 = ((R @ X_safe.T).T + t)[:, 2]
 
-        valid = (z1 > 0) & (z2 > 0)
+        valid = finite & (z1 > 0) & (z2 > 0)
         count = int(valid.sum())
 
         if count > best_count:
