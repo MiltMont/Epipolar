@@ -53,32 +53,32 @@ def _positions(traj: np.ndarray) -> np.ndarray:
 # UI
 # ─────────────────────────────────────────────────────────────────────────────
 
-st.set_page_config(page_title="Trajectory Dashboard", layout="wide")
-st.title("Trajectory Dashboard")
+st.set_page_config(page_title="Panel de Trayectorias", layout="wide")
+st.title("Panel de Trayectorias")
 
 available = _discover_results()
 if not available:
-    st.error(f"No results found in `{RESULTS_DIR}/`. Run an experiment first.")
+    st.error(f"No se encontraron resultados en `{RESULTS_DIR}/`. Ejecute un experimento primero.")
     st.stop()
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.header("Controls")
+    st.header("Controles")
 
-    selected = st.multiselect("Configs", available, default=available[:1])
+    selected = st.multiselect("Configuraciones", available, default=available[:1])
     if not selected:
-        st.warning("Select at least one config.")
+        st.warning("Seleccione al menos una configuración.")
         st.stop()
 
     results = {name: _load_result(name) for name in selected}
     max_n = max(len(r["est"]) for r in results.values())
 
     frame_start, frame_end = st.slider(
-        "Frame range", 0, max_n, (0, max_n), step=1
+        "Rango de fotogramas", 0, max_n, (0, max_n), step=1
     )
 
-    show_gt = st.toggle("Show GT", value=True)
-    apply_umeyama = st.toggle("Umeyama alignment", value=False)
+    show_gt = st.toggle("Mostrar GT", value=True)
+    apply_umeyama = st.toggle("Alineación Umeyama", value=False)
 
     with_scale = False
     if apply_umeyama:
@@ -86,7 +86,7 @@ with st.sidebar:
         any_epipolar = any(
             r["metrics"].get("pipeline") == "epipolar" for r in results.values()
         )
-        with_scale = st.toggle("With scale (epipolar)", value=any_epipolar)
+        with_scale = st.toggle("Con escala (epipolar)", value=any_epipolar)
 
 # ── 3D trajectory plot ────────────────────────────────────────────────────────
 fig3d = go.Figure()
@@ -134,18 +134,18 @@ fig3d.update_layout(
 st.plotly_chart(fig3d, use_container_width=True)
 
 # ── Metrics table ─────────────────────────────────────────────────────────────
-st.subheader("Metrics")
+st.subheader("Métricas")
 
 rows = []
 for name, r in results.items():
     m = r["metrics"]
     row = {
-        "Config": name,
+        "Configuración": name,
         "Pipeline": m.get("pipeline", "—"),
-        "Frames": m.get("n_frames", "—"),
-        "GT frames": m.get("n_gt_frames", "—"),
-        "ATE RMSE (saved)": f"{m['ate_rmse']:.4f}" if "ate_rmse" in m else "—",
-        "ATE RMSE (live)": f"{live_ate[name]:.4f}" if live_ate[name] is not None else "—",
+        "Fotogramas": m.get("n_frames", "—"),
+        "Fotogramas GT": m.get("n_gt_frames", "—"),
+        "ATE RMSE (guardado)": f"{m['ate_rmse']:.4f}" if "ate_rmse" in m else "—",
+        "ATE RMSE (en vivo)": f"{live_ate[name]:.4f}" if live_ate[name] is not None else "—",
         "RTE RMSE": f"{m['rte_rmse']:.4f}" if "rte_rmse" in m else "—",
     }
     rows.append(row)
@@ -160,7 +160,7 @@ ate_traces = [
 ]
 
 if ate_traces:
-    st.subheader("Per-frame ATE (metres)")
+    st.subheader("ATE por fotograma (metros)")
     fig_ate = go.Figure()
     for idx, (name, errors) in enumerate(ate_traces):
         color = COLORS[idx % len(COLORS)]
@@ -173,7 +173,7 @@ if ate_traces:
             line=dict(color=color, width=1.5),
         ))
     fig_ate.update_layout(
-        xaxis_title="Frame index",
+        xaxis_title="Índice de fotograma",
         yaxis_title="ATE (m)",
         height=280,
         margin=dict(l=0, r=0, t=10, b=0),
@@ -182,5 +182,5 @@ if ate_traces:
     st.plotly_chart(fig_ate, use_container_width=True)
 else:
     st.info(
-        "No `ate_errors.npy` found. Re-run experiments to generate per-frame ATE data."
+        "No se encontró `ate_errors.npy`. Vuelva a ejecutar los experimentos para generar datos de ATE por fotograma."
     )
